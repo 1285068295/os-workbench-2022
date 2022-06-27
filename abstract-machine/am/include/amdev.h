@@ -2,6 +2,7 @@
 #define __AMDEV_H__
 
 // **MAY SUBJECT TO CHANGE IN THE FUTURE**
+// typedef struct xxx {} newname;  这里用宏同时定义了多个结构体
 
 #define AM_DEVREG(id, reg, perm, ...) \
   enum { AM_##reg = (id) }; \

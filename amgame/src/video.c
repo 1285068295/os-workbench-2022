@@ -1,5 +1,7 @@
 #include <game.h>
 
+// 屏幕是 640 * 480
+// 实际的 x  y 是  40*SIDE 30 * SIDE
 #define SIDE 16
 static int w, h;
 
@@ -24,9 +26,77 @@ static void draw_tile(int x, int y, int w, int h, uint32_t color) {
 
 void splash() {
   init();
-  for (int x = 0; x * SIDE <= w; x ++) {
-    for (int y = 0; y * SIDE <= h; y++) {
-      if ((x & 1) ^ (y & 1)) {
+  // for (int x = 0; x * SIDE <= w; x ++) {
+  //   for (int y = 0; y * SIDE <= h; y++) {
+  //     if ((x & 1) ^ (y & 1)) {
+  //       draw_tile(x * SIDE, y * SIDE, SIDE, SIDE, 0xffffff); // white
+  //     }
+  //   }
+  // }
+}
+
+
+
+
+/**
+ * @brief 处理方块的坐标信息
+ *        (x', y')  <-- (x + vx/FPS,  y + vy/FPS)
+ *        到达边缘后向相反方向移动
+ * @param square 
+ */
+void game_progress(Square* square)
+{
+  // int FPS = 60;
+  // int xx = square->x + square->vx / FPS;
+  int xx = square->x + square->vx ;
+  if (xx < 0)
+  {
+    xx = 0;
+    square->vx = -square->vx;
+  }
+  else if (xx * SIDE > w)
+  {
+    xx = w / SIDE;
+    square->vx = -square->vx;
+  }
+  else
+  {
+    square->x = xx;
+  }
+ 
+  // int yy = square->y + square->vy / FPS;
+  int yy = square->y + square->vy;
+  if (yy < 0)
+  {
+    yy = 0;
+    square->vy = -square->vy;
+  }
+  else if (yy * SIDE > h)
+  {
+    yy = h / SIDE;
+    square->vy = -square->vy;
+  }
+  else
+  {
+    square->y = yy;
+  }
+}
+
+
+/**
+ * @brief 刷新屏幕
+ * 
+ * @param square 
+ */
+void screen_update(Square square)
+{
+  for (int x = 0; x * SIDE <= w; x++)
+  {
+    for (int y = 0; y * SIDE <= h; y++)
+    {
+      draw_tile(x * SIDE, y * SIDE, SIDE, SIDE, 0); // white
+      if (x == square.x && y == square.y)
+      {
         draw_tile(x * SIDE, y * SIDE, SIDE, SIDE, 0xffffff); // white
       }
     }
