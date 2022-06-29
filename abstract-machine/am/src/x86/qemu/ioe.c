@@ -33,6 +33,8 @@ static void uart_rx(AM_UART_RX_T *recv) {
 
 // Timer
 // ====================================================
+// 有关静态函数外部的使用方法参考 static_function目录
+
 
 static AM_TIMER_RTC_T boot_date;
 static uint32_t freq_mhz = 2000;
@@ -56,18 +58,31 @@ static void read_rtc_async(AM_TIMER_RTC_T *rtc) {
   };
 }
 
+/**
+ * @brief 等一秒钟
+ * 0.3 0.45 0.6 0.75 0.9 1.05
+ * 0.95 1.00
+ * @param t1 
+ */
 static void wait_sec(AM_TIMER_RTC_T *t1) {
   AM_TIMER_RTC_T t0;
   while (1) {
     read_rtc_async(&t0);
     for (int volatile i = 0; i < 100000; i++) ;
     read_rtc_async(t1);
+    // 这里不是很严谨
     if (t0.second != t1->second) {
       return;
     }
   }
 }
 
+/**
+ * @brief estimate 估计，预估 frequency 频率
+ *        通过rdtsc指令来预估cpu频率   返回  xxMHz
+ *        每隔一小时重新预估一次
+ * @return uint32_t 
+ */
 static uint32_t estimate_freq() {
   AM_TIMER_RTC_T rtc1, rtc2;
   uint64_t tsc1, tsc2, t1, t2;
@@ -78,6 +93,7 @@ static uint32_t estimate_freq() {
 }
 
 static void timer_init() {
+  // 预估出cpu的主频是多少MHz
   freq_mhz = estimate_freq();
   timer_rtc(&boot_date);
   uptsc = rdtsc();
@@ -97,6 +113,28 @@ static void timer_rtc(AM_TIMER_RTC_T *rtc) {
 
 static void timer_uptime(AM_TIMER_UPTIME_T *upt) {
   upt->us = (rdtsc() - uptsc) / freq_mhz;
+}
+
+
+
+// ====================================================
+// 对外提供的方法
+/**
+ * @brief rdtsc:Read Time Stamp Counter
+ * 
+ * @return uint64_t 
+ */
+uint64_t cpu_rdtsc()
+{
+  return rdtsc();
+}
+
+/**
+ * @brief 获取cpu频率
+ */
+uint32_t cpu_fre()
+{
+  return freq_mhz;
 }
 
 // Input
@@ -127,7 +165,7 @@ static int keylut[128] = {
   [0x41] = AM_KEY_F7,    [0x42] = AM_KEY_F8,     [0x43] = AM_KEY_F9,
   [0x44] = AM_KEY_F10,   [0x48] = AM_KEY_INSERT,
   [0x4b] = AM_KEY_HOME,  [0x4d] = AM_KEY_END,    [0x50] = AM_KEY_DELETE,
-  [0x57] = AM_KEY_F11,   [0x58] = AM_KEY_F12,    [0x5b] = AM_KEY_APPLICATION,
+  [0x57] = AM_KEY_F11,   [0x58] = AM_KEY_F12,    [0x5b] = AM_KEY_APPLICATION
 };
 
 static void input_config(AM_INPUT_CONFIG_T *cfg) {

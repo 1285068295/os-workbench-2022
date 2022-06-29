@@ -26,6 +26,7 @@ static void draw_tile(int x, int y, int w, int h, uint32_t color) {
 
 void splash() {
   init();
+  // 初始化为黑白相间网格
   // for (int x = 0; x * SIDE <= w; x ++) {
   //   for (int y = 0; y * SIDE <= h; y++) {
   //     if ((x & 1) ^ (y & 1)) {
@@ -54,7 +55,7 @@ void game_progress(Square* square)
     xx = 0;
     square->vx = -square->vx;
   }
-  else if (xx * SIDE > w)
+  else if (xx * SIDE >= w)
   {
     xx = w / SIDE;
     square->vx = -square->vx;
@@ -66,12 +67,12 @@ void game_progress(Square* square)
  
   // int yy = square->y + square->vy / FPS;
   int yy = square->y + square->vy;
-  if (yy < 0)
+  if (yy <= 0)
   {
     yy = 0;
     square->vy = -square->vy;
   }
-  else if (yy * SIDE > h)
+  else if (yy * SIDE >= h)
   {
     yy = h / SIDE;
     square->vy = -square->vy;
@@ -102,3 +103,16 @@ void screen_update(Square square)
     }
   }
 }
+
+/**
+ * @brief   阅读时间戳计数器
+ *          TSC寄存器统计了CPU自启动以来的运行时间，每个时钟信号到来时，TSC递增1。
+ *          cpu频率 = 1秒内TSC寄存器统计的数值。
+ *          (下一时刻读取统计值 - 上一刻统计值 ) * 1000(ms) / CPU主频
+ * @param current_rdtsc 
+ * @return int 
+ */
+int uptime(uint64_t current_rdtsc){
+  for (int volatile i = 0; i < 100000; i++);
+  return  (1000 * (cpu_rdtsc() - current_rdtsc) >> 20) / cpu_fre();
+} 

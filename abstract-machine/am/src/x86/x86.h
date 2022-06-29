@@ -327,6 +327,12 @@ static inline int xchg(int *addr, int newval) {
   return result;
 }
 
+/**
+ * @brief rdtsc:Read Time Stamp Counter
+ *        该指令可以把当前处理器的时间戳加载到EDX:EAX寄存器供外部使用
+ * 
+ * @return uint64_t 
+ */
 static inline uint64_t rdtsc() {
   uint32_t lo, hi;
   asm volatile ("rdtsc": "=a"(lo), "=d"(hi));

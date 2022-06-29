@@ -12,9 +12,20 @@ AM_DEVREG( 1, UART_CONFIG,  RD, bool present);
 AM_DEVREG( 2, UART_TX,      WR, char data);
 AM_DEVREG( 3, UART_RX,      RD, char data);
 AM_DEVREG( 4, TIMER_CONFIG, RD, bool present, has_rtc);
+// 定义了一个  AM_TIMER_RTC_T 结构体 
+// struct AM_TIMER_RTC_T
+// {
+//   int year, month, day, hour, minute, second
+// };
 AM_DEVREG( 5, TIMER_RTC,    RD, int year, month, day, hour, minute, second);
 AM_DEVREG( 6, TIMER_UPTIME, RD, uint64_t us);
 AM_DEVREG( 7, INPUT_CONFIG, RD, bool present);
+// 键盘事件结构体 两个成员
+// struct AM_INPUT_KEYBRD_T
+// {
+//   bool keydown; 
+//   int keycode
+// };
 AM_DEVREG( 8, INPUT_KEYBRD, RD, bool keydown; int keycode);
 AM_DEVREG( 9, GPU_CONFIG,   RD, bool present, has_accel; int width, height, vmemsz);
 AM_DEVREG(10, GPU_STATUS,   RD, bool ready);
@@ -33,7 +44,9 @@ AM_DEVREG(22, NET_STATUS,   RD, int rx_len, tx_len);
 AM_DEVREG(23, NET_TX,       WR, Area buf);
 AM_DEVREG(24, NET_RX,       WR, Area buf);
 
-// Input
+// Input  
+// C语言的宏 必须要加括号 来提高运算优先级  AM_KEYS(_) ——> 实际就是 AM_KEYS_
+// 因为宏就是简单字符串拼接
 
 #define AM_KEYS(_) \
   _(ESCAPE) _(F1) _(F2) _(F3) _(F4) _(F5) _(F6) _(F7) _(F8) _(F9) _(F10) _(F11) _(F12) \

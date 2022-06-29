@@ -77,6 +77,12 @@ extern   Area        heap;
 void     putch       (char ch);
 void     halt        (int code) __attribute__((__noreturn__));
 
+// 下面两个方法提供给L0实验来用
+uint64_t cpu_rdtsc();
+uint32_t cpu_fre();
+
+
+
 // -------------------- IOE: Input/Output Devices --------------------
 bool     ioe_init    (void);
 void     ioe_read    (int reg, void *buf);
