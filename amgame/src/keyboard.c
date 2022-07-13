@@ -19,7 +19,7 @@ void print_key()
 
 /**
  * @brief  TODO 这里不能用 参数传进来的event来接收键盘事件 why???
- * 
+ *         指针的地址不能改变 但是可改变指向的内容
  * @param event 
  * @return int 
  */
