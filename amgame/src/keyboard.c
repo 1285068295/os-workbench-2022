@@ -64,7 +64,7 @@ void kbd_event(AM_INPUT_KEYBRD_T event, Square *square)
     break;
   case AM_KEY_W:
   case AM_KEY_UP:
-    square->vx = -SPEED;
+    square->vy = -SPEED;
     break;
   case AM_KEY_ESCAPE:
     halt(0);

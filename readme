@@ -1,0 +1,3 @@
+1 需要调试那个实验就将对应的 .vscode_xx 改为 .vscode 按F5启动调试
+2 vscode 中F5调试  必须配置tasks.json文件  如果只有launch.json文件中配置的可执行文件
+  vscode不知道去哪里对应a.out的源码文件

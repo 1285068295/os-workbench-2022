@@ -1,0 +1,40 @@
+1  关于协程的实现方式 用的是C语言 setjmp/longjmp
+   学习文档 https://www.cnblogs.com/hazir/p/c_setjmp_longjmp.html
+2  协程的实验会生成协程共享库（动态链接库）
+   在libco/test 目录下执行 ./libco-test-64 报错 ./libco-test-64: error while loading shared libraries: libco-64.so: cannot open shared object file: No such file or directory
+   解决方案：
+       非常不错的文章 --《在 Linux 使用 GCC 编译C语言共享库》https://www.cnblogs.com/ifantastic/p/3526237.html
+   有关静态库/动态库的知识：
+        《Linux下创建自己的共享库》https://blog.csdn.net/gavin__zhou/article/details/50066745
+        《静态库,共享库和动态链接库的区别与联系》 https://blog.csdn.net/lilele12211104/article/details/80393463
+         ldd 查看某个程序的共享库依赖
+
+3  调试时 先要在libco下执行make 再进入test目录 执行 make test  自动测试
+   
+   M2实验讲义已经说明了 需要在Linux下 用export设置环境变量
+   方案1 控制台手动设置 export LD_LIBRARY_PATH=/usr/apt/nju/os/libco:$LD_LIBRARY_PATH, 
+         然后在控制台使用gdb命令调试
+   方案2 vscode自动调试 修改  ~/.bashrc 文件
+         设置环境变量：
+            1.打开 vim ~/.bashrc 文件
+            2.在文件末尾添加一行
+               export LIBRARY_PATH=$LIBRARY_PATH:库文件的路径（如果需要删除环境变量，需要在~/.bashrc中删除环境变量后，关掉终端，重新启动终端才能生效）
+               例子 export LD_LIBRARY_PATH=/usr/apt/nju/os/libco:$LD_LIBRARY_PATH
+            3.重新加载配置文件 source ~/.bashrc
+            4.编译时要指定库名
+               gcc main.c -lmath（-l是在编译时加库,math是libmath.so去掉lib和.so)
+         设置编译参数：-L共享库的路径
+            gcc main.c -L共享库的路径 -lmath 
+   方案3 参考上面的博客《在 Linux 使用 GCC 编译C语言共享库》 使用-Wl,-rpath命令例如
+         修改makefile配置文件 
+            gcc -g -I.. -L.. -Wl,-rpath=/usr/apt/nju/os/libco -m64 main.c -o libco-test-64 -lco-64
+
+4  关于static的使用场景  1 静态局部不变量  2 静态全局变量  3 静态函数
+5  C语言内敛汇编知识
+    《C语言进阶——内联汇编》  https://blog.csdn.net/lyndon_li/article/details/118471845
+     原文 GCC-Inline-Assembly-HOWTO
+    关于实验中内敛汇编 解析
+
+6  vscode 官方使用文档介绍 https://code.visualstudio.com/docs/cpp/cpp-debug 
+    c_cpp_properties.json 配置介绍 https://code.visualstudio.com/docs/cpp/c-cpp-properties-schema-reference
+7  valgrind --leak-check=yes ./a.out 分析程序是否有内存泄漏 

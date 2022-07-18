@@ -10,7 +10,7 @@
 
 
 // 打印树的第三个个版本 整合了pstree01.c pstree02.c代码
-
+// strace 学习 https://www.linuxidc.com/Linux/2018-01/150654.htm
  
 
 
@@ -372,6 +372,16 @@ int filter(const struct dirent *dir)
     return match;
 }
 
+/**
+ * @brief 按照进程号的大小进行排序
+ * 
+ * @return int 
+ */
+int sort(){
+
+}
+
+
 
 /**
  * @brief 读取进程文件得到进程信息并构建树节点
@@ -433,7 +443,7 @@ tree_node* build_print_tree(int total, struct dirent **entry_list)
         struct dirent *entry = entry_list[i];
         tree_node* node = get_pro_info(entry->d_name);
         nodes[i] = node;
-        // printf("process name=%s ,pid=%d, ppid=%d       \n", node->val, node->pid, node->ppid);
+        printf("process name=%s ,pid=%d, ppid=%d       \n", node->val, node->pid, node->ppid);
         // free(node->val);
         // free(node);
         free(entry);
