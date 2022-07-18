@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "amgame", //名称随便取
+            "type": "cppdbg", //调试类型 （java python 用别的类型 具体值没查）
+            "request": "launch", //请求配置类型
+            "miDebuggerServerAddress": "127.0.0.1:1234",
+            "program": "/usr/apt/nju/os/amgame/build/amgame-x86_64-qemu.elf", //可执行程序完整路径（包含程序名称）
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "/usr/apt/nju/os/amgame/build", //可执行程序完整路径（不包含程序名称）
+            "environment": [],
+            "externalConsole": false, 
+            "MIMode": "gdb",
+            "miDebuggerPath":  "/usr/bin/gdb",   //gdb完整路径    "/usr/bin/gdb-multiarch"  
+            // tasks.json 中make 和make run 不能同时执行 git 文件锁冲突
+            "preLaunchTask":  "build-all" // "build-all" // 第一次开始调试的任务  执行makefile进行构建项目，见task.json
+        }
+    ]
+}

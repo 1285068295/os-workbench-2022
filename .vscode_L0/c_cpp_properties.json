@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "name": "L0",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-x64",//    "linux-gcc-x64",
+            // compile_commands.json 生成命令(在amgame目录下) > bear make
+            "compileCommands": "${workspaceFolder}/amgame/compile_commands.json"
+        }
+    ],
+    "version": 4
+}

@@ -1,0 +1,43 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "options": {
+        // 这里指定tasks 的运行目录，默认是${workspaceRoot}，也就是.vscode/..
+        "cwd": "${workspaceFolder}/libco"
+    },
+    "tasks": [
+        {
+            "label": "echo",
+            "command": "echo ${workspaceFolder}",
+            "type": "shell"
+        },
+
+
+
+        {
+            "label": "clean",
+            "command": "make",
+            "args": [
+                "clean"
+            ],
+            "type": "shell"
+
+        },
+        {
+            "label": "make",
+            "command": "make",
+            "type": "shell"
+        },
+        { // 依次调试多个任务，若不配置此，则每次launch只会启动一个任务。
+            "label": "build",
+            // 这里也踩坑了，不加的话顺寻会乱
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "echo",
+                "clean",
+                "make"
+            ]
+        }
+    ]
+}
