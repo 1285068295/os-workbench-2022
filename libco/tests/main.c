@@ -23,17 +23,39 @@ static void work_loop(void *arg) {
     }
 }
 
+
+static void work2(void *arg) {
+    const char *s = (const char*)arg;
+    for (int i = 0; i < 5; ++i) {
+        printf("%s%d\n", s, i);
+        add_count();
+        co_yield();
+    }
+}
+
+static void work1(void *arg) {
+    const char *s = (const char*)arg;
+    for (int i = 0; i < 5; ++i) {
+        printf("%s%d\n", s, i);
+        add_count();
+        co_yield();
+    }
+}
+
 static void work(void *arg) {
     work_loop(arg);
 }
 
 static void test_1() {
 
-    struct co *thd1 = co_start("thread-1", work, "X");
-    struct co *thd2 = co_start("thread-2", work, "Y");
+    // struct co *thd1 = co_start("thread-1", work, "X");
+    // struct co *thd2 = co_start("thread-2", work, "Y");
+
+    struct co *thd1 = co_start("thread-1", work1, "X");
+    struct co *thd2 = co_start("thread-2", work2, "Y");
 
     co_wait(thd1);
-    co_wait(thd2);
+    // co_wait(thd2);
 
 //    printf("\n");
 }
@@ -118,15 +140,20 @@ static void test_2() {
 }
 
 int main() {
+
     setbuf(stdout, NULL);
 
     printf("Test #1. Expect: (X|Y){0, 1, 2, ..., 199}\n");
     test_1();
+    
+    
 
-    printf("\n\nTest #2. Expect: (libco-){200, 201, 202, ..., 399}\n");
-    test_2();
+  
 
-    printf("\n\n");
+    // printf("\n\nTest #2. Expect: (libco-){200, 201, 202, ..., 399}\n");
+    // test_2();
+
+    // printf("\n\n");
 
     return 0;
 }

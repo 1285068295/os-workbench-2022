@@ -3,6 +3,8 @@
 #include <setjmp.h>
 #include <assert.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <string.h>
 
 #define K 1024
 /**
@@ -159,19 +161,21 @@ co_node* remove_co_node()
     // 只有一个节点情况
     if(node_list == node_list->next)
     {
+      // free(node_list->coroutine->name);
       free(node_list->coroutine);
       free(node_list);
       // 返回空方便判断是否双向链表全部删除了
       return NULL;
     }
     else{
-      co_node* head = node_list->next;
+      co_node* head = node_list;
       node_list->next->pre = node_list->pre;
       node_list->pre->next = node_list->next;
-      free(node_list->coroutine);
-      free(node_list);
-      node_list = head;
-      // 返回新的头节点
+      node_list = head->next;
+      // free(head->coroutine->name);
+      free(head->coroutine);
+      free(head);
+      // 返回新的节点
       return node_list;
     }
 }
@@ -203,6 +207,10 @@ struct co *co_start(const char *name, void (*func)(void *), void *arg)
   struct co *coroutine = (struct co *)malloc(sizeof(struct co));
   assert(coroutine);
 
+  // assert(name);   // name必须有值
+  // coroutine->name = (char *)malloc(sizeof(char) * strlen(name) +1);
+  // strcpy(coroutine->name, name);
+
   coroutine->name = name;
   coroutine->func = func;
   coroutine->arg = arg;
@@ -210,6 +218,7 @@ struct co *co_start(const char *name, void (*func)(void *), void *arg)
   coroutine->waiter = NULL;
 
   insert_co_node(coroutine);
+  
   return coroutine;
 }
 
@@ -238,6 +247,7 @@ struct co *co_start(const char *name, void (*func)(void *), void *arg)
 void co_yield() {
 
   // setjmp 保存当前协程的执行上下文环境
+  // printf("co_yield  current = %s\n", current->name);
   int status = setjmp(current->context);
   if (status == 0)
   {
@@ -245,14 +255,12 @@ void co_yield() {
     // 此时我们需要选择下一个待运行的协程 (相当于修改 current)，并切换到这个协程运行。
     
     // 此时的 node_list指向的就是 current
-    node_list = node_list->next;
-
     // 从链表向下循环找到下一个可执行的协程（如果命中了这个if 说明至少有一个协程（当前协程）是CO_NEW状态）
-    while (!(current->status == CO_NEW || current->status == CO_RUNNING))
+    do
     {
       node_list = node_list->next;
       current = node_list->coroutine;
-    }
+    } while (!(current->status == CO_NEW || current->status == CO_RUNNING));
 
     // 切换的新的 current 协程上执行
     // setjmp = 0 表示当前协程第一次调用co_yield，通过node_list得到下一个协程的状态分两种情况
@@ -294,9 +302,11 @@ void co_yield() {
       ((struct co volatile *)current)->status = CO_RUNNING; //这里如果直接赋值，编译器会和后面的覆写进行优化
 
       // 栈由高地址向低地址生长
+      printf("stack_switch_call  current = %s\n", current->name);
       stack_switch_call(current->stack + STACK_SIZE, current->func, current->arg);
       //恢复相关寄存器
       restore_return();
+
 
       //此时协程已经完成执行
       current->status = CO_DEAD;
@@ -315,8 +325,7 @@ void co_yield() {
     assert(status && current->status == CO_RUNNING); //此时一定是选中的进程通过longjmp跳转到的情况执行到这里
   }
 }
-
-
+ 
 
 /**
  * @brief 表示当前协程需要等待，直到 co 协程的执行完成才能继续执行 (类似于 pthread_join)。
@@ -366,6 +375,9 @@ static __attribute__((destructor)) void co_destructor(void) {
     return;
   }
 
-  while (remove_co_node());
+  while (remove_co_node())
+  {
+    // 在remove方法内部不再
+  }
 
 }
