@@ -10,3 +10,11 @@ endif
 include $(AM_HOME)/Makefile
 include ../Makefile.lab
 image: git
+
+# 专门用来跑测试用例的
+# test: git
+# 	@gcc $(shell find src/ -name "*.c")  \
+# 		$(shell find test/ -name "*.c") \
+# 		-Iframework -Itest -DTEST -lpthread \
+# 		-o build/test
+# 	@build/test

@@ -10,8 +10,10 @@
             "cStandard": "gnu17",
             "cppStandard": "c++17",
             "intelliSenseMode": "linux-gcc-x64",   // "linux-gcc-x64",
-            // compile_commands.json 生成命令(在amgame目录下) > bear make
-            "compileCommands": "${workspaceFolder}/amgame/compile_commands.json"
+            // compile_commands.json 生成命令(在amgame目录下) > bear make (注意没有 -nB参数)
+
+            // 可以使用前面提到的技巧(即执行make -nB | sed "s/^/\n/g" | sed "s/ /\n\t/g"，观察并了解整个系统镜像的生成过程:
+            "compileCommands": "${workspaceFolder}/kernel/compile_commands.json"
         }
     ],
     "version": 4

@@ -29,6 +29,10 @@
          修改makefile配置文件 
             gcc -g -I.. -L.. -Wl,-rpath=/usr/apt/nju/os/libco -m64 main.c -o libco-test-64 -lco-64
 
+      生成动态库: gcc -shared -fPIC fun.c -o libfun.so
+      -shared 表示生成动态库，-fPIC 表示生成与位置无关代码，-o 表示指定生成的目标文件，
+
+
 4  关于static的使用场景  1 静态局部不变量  2 静态全局变量  3 静态函数
 5  C语言内敛汇编知识
     《C语言进阶——内联汇编》  https://blog.csdn.net/lyndon_li/article/details/118471845

@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "cstdio": "c",
-        "co-test.h": "c",
-        "sstream": "c"
-    }
-}

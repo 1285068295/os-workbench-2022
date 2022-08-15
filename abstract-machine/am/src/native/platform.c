@@ -153,7 +153,7 @@ static void init_platform() {
   // disable interrupts by default
   iset(0);
 
-  // set ncpu
+  // set ncpu  读取本机的配置 得到cup核心数
   const char *smp = getenv("smp");
   __am_ncpu = smp ? atoi(smp) : 1;
   assert(0 < __am_ncpu && __am_ncpu <= MAX_CPU);

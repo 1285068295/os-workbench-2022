@@ -1,23 +1,23 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "libco", //名称随便取
+            "name": "kernel", //名称随便取
             "type": "cppdbg", //调试类型 （java python 用别的类型 具体值没查）
             "request": "launch", //请求配置类型
-            // "miDebuggerServerAddress": "127.0.0.1:1234",
-            "program": "${workspaceFolder}/libco/tests/libco-test-64", //可执行程序完整路径（包含程序名称）
+            "miDebuggerServerAddress": "127.0.0.1:1234",
+
+            // gdb -ex "target remote localhost:1737" -ex "dir ./src" ./build/kernel-x86_64-qemu.elf
+            "program": "/usr/apt/nju/os/kernel/build/kernel-x86_64-qemu.elf", //可执行程序完整路径（包含程序名称）
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/libco/tests", //可执行程序完整路径（不包含程序名称）
+            "cwd": "/usr/apt/nju/os/kernel/build", //可执行程序完整路径（不包含程序名称）
             "environment": [],
-            "externalConsole": false,
+            "externalConsole": false, 
             "MIMode": "gdb",
-            "miDebuggerPath": "/usr/bin/gdb", //gdb完整路径    "/usr/bin/gdb-multiarch"  
-            "preLaunchTask": "build" // "build-all" // 第一次开始调试的任务  执行makefile进行构建项目，见task.json
+            "miDebuggerPath":  "/usr/bin/gdb",   //gdb完整路径    "/usr/bin/gdb-multiarch"  
+            // tasks.json 中make 和make run 不能同时执行 git 文件锁冲突
+            "preLaunchTask":  "build-all" // "build-all" // 第一次开始调试的任务  执行makefile进行构建项目，见task.json
         }
     ]
 }

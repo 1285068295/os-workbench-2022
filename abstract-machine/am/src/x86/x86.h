@@ -320,6 +320,11 @@ static inline void set_cr3(void *pdir) {
   asm volatile ("mov %0, %%cr3" : : "r"(pdir));
 }
 
+
+/**
+ * @brief x86的原子的交换指令
+ *        可以用这个实现自旋锁
+ */
 static inline int xchg(int *addr, int newval) {
   int result;
   asm volatile ("lock xchg %0, %1":

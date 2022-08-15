@@ -1,0 +1,10 @@
+参考文献
+    http://www.ibiblio.org/gferg/ldp/GCC-Inline-Assembly-HOWTO.html
+    http://rk700.github.io/2020/01/19/inline-assembly-constraints/
+    https://blog.csdn.net/qq_41230365/article/details/89479493
+    https://blog.csdn.net/lin111000713/article/details/18892449
+    https://www.cnblogs.com/codeprojects/p/14081910.html ---介绍了关于volatile关键字以及破环部分 momery 说明
+
+1 疑惑的地方
+  如果指令本身就是为了要修改寄存器的值，这时还需要声明影响部分吗？
+2 在内联汇编中为了计算C语言的变量值，使用了内联汇编，最终需要声明影响部分。

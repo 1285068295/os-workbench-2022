@@ -1,5 +1,5 @@
 {
-    // L0实验 配置文件
+    // L0实验 配置文件  如果c_cpp_compiles.json配置的compile_commands.json没生效 重启下 vscode
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     "version": "2.0.0",

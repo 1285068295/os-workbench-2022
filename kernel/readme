@@ -1,0 +1,10 @@
+实验框架代码由三个目录组成：
+├── framework  -> 框架代码；可以在本地修改，但 Online Judge 评测时会被替换成我们的版本
+│   ├── kernel.h
+│   └── main.c
+├── include    -> 头文件；可以自由修改/创建文件 (Online Judge 会复制)
+│   └── common.h
+├── Makefile
+└── src        -> 源文件；可以自由修改/创建文件 (Online Judge 会复制)
+    ├── os.c
+    └── pmm.c
