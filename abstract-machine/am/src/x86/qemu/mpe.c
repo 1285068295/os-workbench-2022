@@ -9,6 +9,13 @@ static void call_user_entry() {
   panic("MPE entry should not return");
 }
 
+/**
+ * @brief 启动多处理器
+ * 
+ * @param entry 
+ * @return true 
+ * @return false 
+ */
 bool mpe_init(void (*entry)()) {
   user_entry = entry;
   boot_record()->jmp_code = 0x000bfde9; // (16-bit) jmp (0x7c00)

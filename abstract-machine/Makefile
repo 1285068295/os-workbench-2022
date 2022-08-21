@@ -105,6 +105,10 @@ endif
 $(DST_DIR)/%.o: %.c
 	@mkdir -p $(dir $@) && echo + CC $<
 	@$(CC) -std=gnu11 $(CFLAGS) -c -o $@ $(realpath $<)
+#   上面的-c -o 替换后 为了能够 清楚的观察宏的使用  真正运行行项目需要使用上面的-c -o 选项
+#	@$(CC) -std=gnu11 $(CFLAGS) -E $@ $(realpath $<)  
+
+
 
 ### Rule (compile): a single `.cc` -> `.o` (g++)
 $(DST_DIR)/%.o: %.cc

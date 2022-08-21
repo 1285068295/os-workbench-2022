@@ -57,13 +57,28 @@ void halt(int code) {
   outw(0x604, 0x2000); // offer of qemu :)
   while (1) hlt();
 }
-
+/**
+ * @brief Makefile中的-c -o 替换后 为了能够 清楚的观察宏的使用  真正运行行项目需要使用上面的-c -o 选项
+ * 
+ * @return Area 
+ */
 Area __am_heap_init() {
   extern char end;
+  // 有关端口映射的说明 https://blog.csdn.net/baidu_37973494/article/details/82390383
+  // ???
   outb(0x70, 0x34);
+  // lo = 0
   uint32_t lo = inb(0x71);
+
+  // ???
   outb(0x70, 0x35);
+  // hi = 8
   uint32_t hi = inb(0x71) + 1;
+  // 宏定义 RANGE(st, ed)       (Area) { .start = (void *)(st), .end = (void *)(ed) }
+  // 转换后  (Area) { .start = (void *)(ROUNDUP(&end, 1 << 20)),  
+  //                  .end   = (void *)((uintptr_t)((lo | hi << 8) << 16)) }
+
+  // 利用宏初始化 堆空间大小 125MB
   return RANGE(ROUNDUP(&end, 1 << 20), (uintptr_t)((lo | hi << 8) << 16));
 }
 

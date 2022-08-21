@@ -1,3 +1,51 @@
 1 需要调试那个实验就将对应的 .vscode_xx 改为 .vscode 按F5启动调试
 2 vscode 中F5调试  必须配置tasks.json文件  如果只有launch.json文件中配置的可执行文件
   vscode不知道去哪里对应a.out的源码文件
+3 $ make -nB # RTFM!
+... (完全不可读的输出)
+但如果你稍稍对输出做一些处理
+
+make -nB | grep -v '^mkdir' | vim -
+并且在 Vim 里做一些你舒适的文本处理，例如 :%s/^/\r 在命令之间插入空行；:%s/ /\r /g 
+将命令的参数缩进排版……你很快就会得到 “可读” 的代码，例如编译一个 .c 文件的命令：
+x86_64-linux-gnu-gcc
+  -std=gnu11 -O2
+  -MMD -Wall -Werror -ggdb
+  -Iinclude/ -Iframework/ -I$KERNEL/include -I$AM/am/include/ -I$AM/klib/include/
+  -D__ISA__=\"x86_64\"
+  -D__ISA_X86_64__
+  -D__ARCH__=x86_64-qemu
+  -D__ARCH_X86_64_QEMU
+  -D__PLATFORM__=qemu
+  -D__PLATFORM_QEMU
+  -DARCH_H=\"arch/x86_64-qemu.h\"
+  -fno-asynchronous-unwind-tables -fno-builtin -fno-stack-protector -Wno-main -m64 -fPIC -mno-sse
+  -c -o $BUILD/x86_64-qemu/framework/main.o
+  $KERNEL/framework/main.c
+
+  链接生成 ELF 文件的命令：
+  x86_64-linux-gnu-ld
+    -melf_x86_64 -N
+    -Ttext-segment=0x00100000
+    -o $BUILD/kernel-x86_64-qemu.elf
+    $BUILD/x86_64-qemu/framework/main.o
+    $BUILD/x86_64-qemu/./src/pmm.o
+    $BUILD/x86_64-qemu/./src/os.o
+    $AM/am/build/am-x86_64-qemu.a
+    $AM/klib/build/klib-x86_64-qemu.a
+  
+以及最终生成可运行的磁盘镜像的过程：
+
+( cat $AM/am/src/x86/qemu/boot/bootblock.o;
+  head -c 1024 /dev/zero;
+  cat $BUILD/kernel-x86_64-qemu.elf
+) > $BUILD/kernel-x86_64-qemu
+
+如果要启动多个处理器，可以为 make run 传递 smp 环境变量，例如 smp=2 代表启动 2 个处理器；smp=4 代表启动 4 个处理器
+$ make run ARCH=x86_64 smp=4
+...
+Got 125 MiB heap: [0x300000, 0x8000000)
+Hello World from CPU #1
+Hello World from CPU #2
+Hello World from CPU #3
+Hello World from CPU #0

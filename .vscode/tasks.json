@@ -32,7 +32,9 @@
             "label": "run",
             "command": "make",
             "args": [
-                "run"
+                "run",
+                // "ARCH=x86_64",
+                "smp=3"
             ],
             "type": "shell",
             // "problemMatcher": "$tsc-watch",  官网给出的指示不好用

@@ -175,6 +175,10 @@ void printFloat(double f)
   }
 }
 
+
+/**
+ * @brief 暂时先不考虑线程安全问题
+ */
 int printf(const char *fmt, ...)
 {
   // panic("Not implemented");
